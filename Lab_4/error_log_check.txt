@@ -1,0 +1,9 @@
+Sep 25 00:14:41 anmo4276-VirtualBox thermald[587]: [WARN]error: could not parse file /etc/thermald/thermal-conf.xml
+Sep 25 00:14:41 anmo4276-VirtualBox thermald[587]: [WARN]error: could not parse file /etc/thermald/thermal-conf.xml
+Sep 25 00:14:41 anmo4276-VirtualBox thermald[587]: [WARN]error: could not parse file /etc/thermald/thermal-conf.xml
+Sep 25 00:14:43 anmo4276-VirtualBox NetworkManager[565]: <warn>  [1601014483.4331] Error: failed to open /run/network/ifstate
+Sep 25 00:14:53 anmo4276-VirtualBox /usr/lib/gdm3/gdm-x-session[1001]: #011(WW) warning, (EE) error, (NI) not implemented, (??) unknown.
+Sep 25 00:14:53 anmo4276-VirtualBox systemd-resolved[519]: Server returned error NXDOMAIN, mitigating potential DNS violation DVE-2018-0001, retrying transaction with reduced feature level UDP.
+Sep 25 00:14:54 anmo4276-VirtualBox systemd-resolved[519]: Server returned error NXDOMAIN, mitigating potential DNS violation DVE-2018-0001, retrying transaction with reduced feature level UDP.
+Sep 25 00:14:56 anmo4276-VirtualBox gnome-session-c[1226]: Error creating FIFO: File exists
+Binary file syslog matches
