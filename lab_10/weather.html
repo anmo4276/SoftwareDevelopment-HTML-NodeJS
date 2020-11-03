@@ -1,0 +1,272 @@
+<!-- Home Page -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>Weather Information</title>
+    <!-- Bootstrap core CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <link rel="stylesheet" href="./resources/css/layout.css">
+  </head>
+  <body>
+  	<div class="container">
+		<br>
+		<h1 id="heading" style="text-align:center">Weather Forecast</h1>
+		<hr>
+    <div class="row">
+      <div class="col-6">
+        <div class="row">
+          <div class="col-2">
+            <!-- source for images: https://www.iconfinder.com/iconsets/weather-line-19 -->
+            <img id="image_today" class="img-fluid" src="./resources/img/clear-day.png" alt="Today's Weather Icon">
+          </div>
+          <div class="col-10">
+            <h5>
+              Local Date/Time: <span id="local_time">2020-04-01 11:00AM</span><br>
+              Precipitation: <span id="precip_today">10%</span><br>
+              Humidity: <span id="humidity_today">80%</span><br>
+              Wind Speed: <span id="wind_today">5</span> mph<br>
+              Summary: <span id="summary_today">Summary Info</span>
+            </h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-2">
+
+      </div>
+      <div class="col-4">
+        <div class="card" >
+          <div id="thermometer_outer">
+            <div id="thermometer_inner"><p id="temp_today" class="h3"> 0 F</p></div>
+          </div>
+          <div class="card-body">
+              <h5 class="text-center">Thermometer</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <label><b>Latitude</b></label>
+      <input id="latitude"></input>
+      <label><b>Longitude</b></label>
+      <input id="longitude"></input>
+      <button type="button" class="btn btn-outline-primary" onclick="customLocation()">Change Weather</button>
+    </div>
+		<br>
+		<h2 class="h1" style="text-align:center;">5 Day Forecast</h2>
+		<hr>
+		<div class="row" id="5_day_forecast">
+
+		</div>
+		<br>
+	</div>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="./resources/js/script.js"></script>
+  <script>
+  function customLocation(){
+    var url ='http://api.weatherstack.com/forecast?access_key=5bc82451636190abd9d7afe6fe9b20b5&query=' + document.getElementById("latitude").value + ',' + document.getElementById("longitude").value + '&forecast_days=6'; //Place your weatherstack API Call Here
+    $.ajax({url:url, dataType:"jsonp"}).then(function(data) {
+      console.log(data);//Review all of the data returned
+		  console.log("Current Temp: " + data.current.temperature);//View Today's Temp
+    //   1. image_today : This should display an image for today's weather.
+    //      This will use the icon that is returned by the API. You will be looking for the
+    //      data.current.weather_icons key in the response.
+    //
+    //   2. heading: The location should be appended to the heading. For eg: "Today's Weather Forecast - Boulder".
+    //       Hint: look at the location key to find this information.
+
+    //   3. temp_today : This will be updated to match the current temperature (data.current.temperature).
+    //       Use the getFarenheitTemp() helper function to convert the temperature from celsius to farenheit.
+
+    //   4. thermometer_inner : Modify the height of the thermometer to match the current temperature. You will have to modify
+    //       the CSS in the sylesheet (layout.css) linked to the weather.html file.
+    //       (i.e., #thermometer_inner { width: 95%; height: 20%; margin:2.5%; background: red; position:absolute; bottom:0;})
+    //       If the temperature is 32 F, then the thermometer will have a height of 32%.  Please note, this thermometer has a
+    //       lower boundary of 0 and upper boundary of 100.
+
+    //   5. precip_today : This will be updated to match the current probability for precipitation. Be sure to check the unit
+    //       of the value returned and append that to the value displayed.
+
+    //   6. humidity_today : This will be updated to match the current humidity percentage (make sure this is listed as a
+    //       percentage %)
+
+    //   7. wind_today : This will be updated to match the current wind speed.
+
+    //   8. summary_today: This will be updated to match the current summary for the day's weather
+        $("#image_today").attr("src", data.current.weather_icons[0]);
+        $("#heading").html("Today's Weather Forecast - " + data.location.name);
+        $("#temp_today").html(getFarenheitTemp(data.current.temperature) + ' F');
+        $('#thermometer_inner').height(getFarenheitTemp(data.current.temperature) + '%');
+        if (getFarenheitTemp(data.current.temperature) > 85){
+          $('#thermometer_inner').css('background','red');
+        }else if (getFarenheitTemp(data.current.temperature) < 65){
+          $('#thermometer_inner').css('background','blue');
+        }else{
+          $('#thermometer_inner').css('background','grey');
+        }
+        $("#precip_today").html(data.current.precip + ' %');
+        $("#humidity_today").html(data.current.humidity  + '%');
+        $("#wind_today").html(data.current.wind_speed);
+        $("#summary_today").html(data.current.weather_descriptions);
+        $("#local_time").html(data.location.localtime);
+        //For the next 5 days you will need to add a new card listing:
+
+        // 1. The day of the week
+
+        // 2. The temperature high
+
+        // 3. The temperature low
+
+        // 4. Sunrise (Hint: look at the data.forecast[date].astro key)
+
+        // 5. Sunset (Hint: look at the data.forecast[date].astro key)
+        var day = "";
+        document.getElementById("5_day_forecast").innerHTML = ``
+        function dateZeros(date, month, year)
+        {
+          if (month.length < 2){
+            month = ('0' + month);
+          }
+          if(date.length < 2){
+            date = ('0' + date);
+          }
+          return [year,month,date].join('-');
+        }
+        function getDayName(date, month, year){
+          var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          day =  days[new Date([month,date,year].join('-')).getDay()];
+        }
+        function getForecastDataAt(i){ //Store the forecast data
+            var date =new Date();
+            var day = date.getDate() + i;
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var forecast = dateZeros(day.toString(),month.toString(),year.toString()).toString();
+            getDayName(day,month,year);
+            return data.forecast[forecast];
+        }
+        for (i = 1; i < 6; i++) //For the 5 day forecast:
+        {
+          var forecastData = getForecastDataAt(i);
+          document.getElementById("5_day_forecast").innerHTML += `<div style="width: 20%;">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">${day}</h5>
+                <p class="card-text">High: ${getFarenheitTemp(forecastData.maxtemp)} F<br>
+                  Low: ${getFarenheitTemp(forecastData.mintemp)} F <br>
+                  Sunrise: ${forecastData.astro.sunrise}<br>
+                  Sunset: ${forecastData.astro.sunset}</p>
+              </div>
+            </div>
+          </div>`
+        }
+    
+    })
+  }
+  
+  $(document).ready(function() {
+    var url ='http://api.weatherstack.com/forecast?access_key=5bc82451636190abd9d7afe6fe9b20b5&query=' + 40.014984 + ',' + -105.270546 + '&forecast_days=6'; //Place your weatherstack API Call Here
+    $.ajax({url:url, dataType:"jsonp"}).then(function(data) {
+      console.log(data);//Review all of the data returned
+		  console.log("Current Temp: " + data.current.temperature);//View Today's Temp
+    //   1. image_today : This should display an image for today's weather.
+    //      This will use the icon that is returned by the API. You will be looking for the
+    //      data.current.weather_icons key in the response.
+    //
+    //   2. heading: The location should be appended to the heading. For eg: "Today's Weather Forecast - Boulder".
+    //       Hint: look at the location key to find this information.
+
+    //   3. temp_today : This will be updated to match the current temperature (data.current.temperature).
+    //       Use the getFarenheitTemp() helper function to convert the temperature from celsius to farenheit.
+
+    //   4. thermometer_inner : Modify the height of the thermometer to match the current temperature. You will have to modify
+    //       the CSS in the sylesheet (layout.css) linked to the weather.html file.
+    //       (i.e., #thermometer_inner { width: 95%; height: 20%; margin:2.5%; background: red; position:absolute; bottom:0;})
+    //       If the temperature is 32 F, then the thermometer will have a height of 32%.  Please note, this thermometer has a
+    //       lower boundary of 0 and upper boundary of 100.
+
+    //   5. precip_today : This will be updated to match the current probability for precipitation. Be sure to check the unit
+    //       of the value returned and append that to the value displayed.
+
+    //   6. humidity_today : This will be updated to match the current humidity percentage (make sure this is listed as a
+    //       percentage %)
+
+    //   7. wind_today : This will be updated to match the current wind speed.
+
+    //   8. summary_today: This will be updated to match the current summary for the day's weather
+        $("#image_today").attr("src", data.current.weather_icons[0]);
+        $("#heading").html("Today's Weather Forecast - " + data.location.name);
+        $("#temp_today").html(getFarenheitTemp(data.current.temperature) + ' F');
+        $('#thermometer_inner').height(getFarenheitTemp(data.current.temperature) + '%');
+        if (getFarenheitTemp(data.current.temperature) > 85){
+          $('#thermometer_inner').css('background','red');
+        }else if (getFarenheitTemp(data.current.temperature) < 65){
+          $('#thermometer_inner').css('background','blue');
+        }else{
+          $('#thermometer_inner').css('background','grey');
+        }
+        $("#precip_today").html(data.current.precip + ' %');
+        $("#humidity_today").html(data.current.humidity  + '%');
+        $("#wind_today").html(data.current.wind_speed);
+        $("#summary_today").html(data.current.weather_descriptions);
+        $("#local_time").html(data.location.localtime);
+        //For the next 5 days you will need to add a new card listing:
+
+        // 1. The day of the week
+
+        // 2. The temperature high
+
+        // 3. The temperature low
+
+        // 4. Sunrise (Hint: look at the data.forecast[date].astro key)
+
+        // 5. Sunset (Hint: look at the data.forecast[date].astro key)
+        var day = "";
+        function dateZeros(date, month, year)
+        {
+          if (month.length < 2){
+            month = ('0' + month);
+          }
+          if(date.length < 2){
+            date = ('0' + date);
+          }
+          return [year,month,date].join('-');
+        }
+        function getDayName(date, month, year){
+          var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          day =  days[new Date([month,date,year].join('-')).getDay()];
+        }
+        function getForecastDataAt(i){ //Store the forecast data
+            var date =new Date();
+            var day = date.getDate() + i;
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            var forecast = dateZeros(day.toString(),month.toString(),year.toString()).toString();
+            getDayName(day,month,year);
+            return data.forecast[forecast];
+        }
+        for (i = 1; i < 6; i++) //For the 5 day forecast:
+        {
+          var forecastData = getForecastDataAt(i);
+          document.getElementById("5_day_forecast").innerHTML += `<div style="width: 20%;">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">${day}</h5>
+                <p class="card-text">High: ${getFarenheitTemp(forecastData.maxtemp)} F<br>
+                  Low: ${getFarenheitTemp(forecastData.mintemp)} F <br>
+                  Sunrise: ${forecastData.astro.sunrise}<br>
+                  Sunset: ${forecastData.astro.sunset}</p>
+              </div>
+            </div>
+          </div>`
+        }
+    
+    })
+  })
+</script>
+</body>
+</html>
